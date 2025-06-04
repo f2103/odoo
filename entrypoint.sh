@@ -1,30 +1,24 @@
 #!/bin/sh
 set -e
 
-echo "⏳ waiting for database $ODOO_DATABASE_HOST:$ODOO_DATABASE_PORT ..."
+echo "⏳ waiting for db $ODOO_DATABASE_HOST:$ODOO_DATABASE_PORT …"
 until nc -z "$ODOO_DATABASE_HOST" "$ODOO_DATABASE_PORT"; do sleep 1; done
-echo "✅ database available"
+echo "✅ database up"
 
-###############################################################################
-# 1.  Clone the requested OCA repos (match the Odoo major version!)
-###############################################################################
-ODOO_MAJOR=${ODOO_VERSION:-17.0}           # set ODOO_VERSION=18.0 later on
+ODOO_MAJOR=${ODOO_VERSION:-17.0}          # set ODOO_VERSION=18.0 when you switch images
 EXTRA_ADDONS=/mnt/extra-addons
 
 if [ -n "$OCA_REPOS" ]; then
   mkdir -p "$EXTRA_ADDONS"
   IFS=',' read -ra repos <<< "$OCA_REPOS"
   for r in "${repos[@]}"; do
-      echo "→ cloning OCA/$r (branch $ODOO_MAJOR)"
-      git clone --depth 1 --branch "$ODOO_MAJOR" \
-          "https://github.com/OCA/$r.git" "$EXTRA_ADDONS/$r"
+    echo "→ cloning OCA/$r (branch $ODOO_MAJOR)"
+    git clone --depth 1 --branch "$ODOO_MAJOR" \
+      "https://github.com/OCA/$r.git" "$EXTRA_ADDONS/$r"
   done
   chown -R odoo:odoo "$EXTRA_ADDONS"
 fi
 
-###############################################################################
-# 2.  Build a *real* --addons-path and start Odoo
-###############################################################################
 BASE_ADDONS=/usr/lib/python3/dist-packages/odoo/addons
 ADDONS_PATH="$BASE_ADDONS,$EXTRA_ADDONS"
 
@@ -33,7 +27,7 @@ exec odoo \
   --proxy-mode \
   --without-demo=True \
   --addons-path="$ADDONS_PATH" \
-  --log-handler=odoo.modules.loading:DEBUG \
+  --log-handler=odoo.modules.loading:DEBUG \    # shows every module Odoo loads/skips
   --db_host="$ODOO_DATABASE_HOST" \
   --db_port="$ODOO_DATABASE_PORT" \
   --db_user="$ODOO_DATABASE_USER" \
