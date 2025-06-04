@@ -22,7 +22,7 @@ RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/mis-builder.git /op
 RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/web.git /opt/odoo/custom_addons/web
 RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/account-financial-tools.git /opt/odoo/custom_addons/account-financial-tools
 RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/project.git /opt/odoo/custom_addons/project
-RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/resource_booking.git /opt/odoo/custom_addons/resource_booking
+RUN git clone --depth 1 --branch 16.0 https://github.com/OCA/resource_booking.git /opt/odoo/custom_addons/resource_booking
 RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/hr.git /opt/odoo/custom_addons/hr
 RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/timesheet.git /opt/odoo/custom_addons/timesheet
 RUN git clone --depth 1 --branch 17.0 https://github.com/OCA/purchase-workflow.git /opt/odoo/custom_addons/purchase-workflow
